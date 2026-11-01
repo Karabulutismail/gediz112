@@ -1,0 +1,463 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#C4420C"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="apple-touch-icon.png"></head><body>
+<title>Gediz 112 Shift 5</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: single-column shift log (max 760px); the triage tag is the signature object. */
+:root{
+  --bg:#EEF2F1; --surface:#FFFFFF; --soft:#E2EAE7; --ink:#13201C; --muted:#56655F; --line:#CFD9D5;
+  --accent:#C4420C; --accent-ink:#FFFFFF;
+  --red:#C62828; --yellow:#F2C200; --green:#2E7D32; --black:#161A19; --on-yellow:#1E1A00;
+  --ok:#2E7D32; --bad:#C62828;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1412; --surface:#17201D; --soft:#1F2A27; --ink:#E6EEEB; --muted:#9BAAA5; --line:#2C3934;
+  --accent:#FF7A3D; --accent-ink:#1A0A00;
+  --red:#E5534B; --yellow:#F2C200; --green:#4CAF50; --black:#000000; --on-yellow:#1E1A00;
+  --ok:#5CC662; --bad:#F06A62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1412; --surface:#17201D; --soft:#1F2A27; --ink:#E6EEEB; --muted:#9BAAA5; --line:#2C3934;
+  --accent:#FF7A3D; --accent-ink:#1A0A00;
+  --red:#E5534B; --yellow:#F2C200; --green:#4CAF50; --black:#000000; --on-yellow:#1E1A00;
+  --ok:#5CC662; --bad:#F06A62; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body)}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+
+/* header */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar .wrap{padding-block:10px 0}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{margin:0;font:700 1.55rem/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.brand h1 span{color:var(--accent)}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.chips{display:flex;gap:8px}
+.chip{font:500 .8rem/1 var(--f-mono);padding:7px 10px;border:1px solid var(--line);border-radius:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.steps{display:flex;gap:4px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.steps button{flex:1 0 auto;border:0;background:none;padding:6px 8px 8px;border-bottom:3px solid var(--line);font:600 .95rem/1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.steps button.on{color:var(--ink);border-color:var(--accent)}
+.steps button.done{color:var(--ink)}
+
+/* content */
+main{padding-top:20px;display:grid;gap:20px}
+h2{margin:0;font:700 2rem/1.05 var(--f-display);text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+h3{margin:0 0 8px;font:700 1.25rem/1.15 var(--f-display);text-transform:uppercase;letter-spacing:.03em}
+p{margin:0}
+.layer{display:inline-block;font:500 .72rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:3px;margin-bottom:8px}
+.layer.core{background:var(--soft);color:var(--muted)}
+.layer.exp{background:var(--accent);color:var(--accent-ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px}
+.reading p+p{margin-top:10px}
+.reading{max-width:65ch}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+.vocab{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.vocab li{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.vocab li:first-child{border-top:0}
+.vocab b{display:block}
+.vocab span{color:var(--muted);font-size:.9rem}
+.say{border:1px solid var(--line);background:var(--soft);border-radius:4px;width:36px;height:36px;display:grid;place-items:center;flex:none}
+.say svg{width:16px;height:16px;fill:currentColor}
+
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.flow li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border-left:4px solid var(--line);background:var(--soft);border-radius:0 4px 4px 0}
+.flow li .q{font-weight:700}
+.pill{font:700 .85rem/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;padding:6px 9px;border-radius:3px;white-space:nowrap}
+.p-red{background:var(--red);color:#fff}
+.p-yellow{background:var(--yellow);color:var(--on-yellow)}
+.p-green{background:var(--green);color:#fff}
+.p-black{background:var(--black);color:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+
+.mcq{display:grid;gap:8px}
+.mcq + .mcq{margin-top:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:9px 12px;text-align:left}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok)}
+.opt.wrong{border-color:var(--bad);text-decoration:line-through;color:var(--muted)}
+.opt:disabled{cursor:default}
+.fb{font-size:.9rem;padding-left:10px;border-left:3px solid var(--line)}
+.fb.ok{border-color:var(--ok)}
+.fb.no{border-color:var(--bad)}
+
+.radio{font-family:var(--f-mono);font-size:.92rem;background:var(--soft);border-radius:4px;padding:12px 14px;line-height:1.6}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:11px 16px;font:700 1.05rem/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+
+.speaker{display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font:700 1rem/1 var(--f-display);border:1px solid var(--line)}
+.choice{display:grid;gap:8px}
+.choice .opt{width:100%}
+.outcome{padding:12px 14px;border-radius:4px;background:var(--soft);border-left:4px solid var(--line)}
+.outcome.ok{border-color:var(--ok)}
+.outcome.no{border-color:var(--bad)}
+
+/* triage tags */
+.tags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:620px){.tags{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tag{position:relative;display:grid;gap:4px;align-content:start;text-align:left;min-height:132px;padding:28px 12px 12px;background:var(--surface);border:1px solid var(--line);border-radius:4px 4px 10px 10px;clip-path:polygon(14% 0,86% 0,100% 12%,100% 100%,0 100%,0 12%)}
+.tag::before{content:"";position:absolute;top:9px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;border:2px solid var(--muted);background:var(--bg)}
+.tag .tid{font:700 1.5rem/1 var(--f-display)}
+.tag .who{font-size:.85rem;color:var(--muted)}
+.tag .st{margin-top:auto;font:700 .8rem/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase;padding:6px 0 0;border-top:6px solid var(--line)}
+.tag.sel{outline:3px solid var(--accent);outline-offset:-3px}
+.tag.t-red .st{border-color:var(--red)} .tag.t-yellow .st{border-color:var(--yellow)}
+.tag.t-green .st{border-color:var(--green)} .tag.t-black .st{border-color:var(--black)}
+.panel{display:grid;gap:14px}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.check{border:1px dashed var(--muted);background:none;border-radius:4px;padding:10px 12px;text-align:left;font-size:.92rem}
+.check small{display:block;font-family:var(--f-mono);color:var(--muted);font-size:.75rem}
+.check:disabled{border-style:solid;opacity:.5;cursor:default}
+.findings{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.findings li{font-family:var(--f-mono);font-size:.88rem;padding:8px 10px;background:var(--soft);border-radius:4px}
+.findings li b{font-family:var(--f-body)}
+.assign{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:460px){.assign{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.assign button{border:0;border-radius:4px;padding:12px 6px;font:700 1.05rem/1.05 var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+.assign button small{display:block;font:400 .75rem/1.2 var(--f-body);letter-spacing:0;text-transform:none;opacity:.85}
+.assign .picked{outline:3px solid var(--ink);outline-offset:2px}
+
+.pieces{display:grid;gap:8px}
+.piece{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:10px 12px;text-align:left;font-family:var(--f-mono);font-size:.9rem}
+.piece:disabled{opacity:.35;cursor:default}
+.built{min-height:60px;display:grid;gap:6px;padding:12px;border:2px dashed var(--line);border-radius:4px}
+.built .ln{font-family:var(--f-mono);font-size:.9rem}
+
+.score{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+.score .big{font:700 3.6rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.badge{border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;gap:4px}
+.badge b{font:700 1.05rem/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.04em}
+.badge.off{opacity:.4}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+th{font:600 .8rem/1 var(--f-mono);text-transform:uppercase;color:var(--muted);border-top:0}
+.note{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:8px}
+@media (prefers-reduced-motion:no-preference){.tag,.opt,.btn{transition:transform .12s, border-color .12s}.tag:active{transform:scale(.98)}}
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand">
+      <div>
+        <h1>Gediz <span>112</span> · Shift 5</h1>
+        <p>Unit 5 · Trauma and START triage</p>
+      </div>
+      <div class="chips">
+        <span class="chip" id="xp">XP 0</span>
+        <span class="chip" id="clock" title="Scene clock">⏱ 0:00</span>
+      </div>
+    </div>
+    <nav class="steps" id="steps" aria-label="Shift steps"></nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <main id="main"></main>
+  <p class="note">Prototip · Ünite 5. <b>Ortak çekirdek</b> (iki grup): okuma metni, dil odağı, START akışı. <b>Deney katmanı</b>: telsiz çağrısı, dallanan sahne, triyaj oyunu, telsiz raporu, puan ve rozetler. Ses şimdilik tarayıcının yerleşik sesi; YZ seslendirmesi sonra eklenecek. Tıbbi içerik henüz bir hekim tarafından kontrol edilmedi.</p>
+</div>
+
+<script>
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
+const STEPS=[
+  {t:'Briefing'},{t:'Dispatch'},{t:'On scene'},{t:'Triage'},{t:'Radio'},{t:'Debrief'}
+];
+const TAGS={
+  red:{n:'Red',sub:'Immediate',p:3},yellow:{n:'Yellow',sub:'Delayed',p:2},
+  green:{n:'Green',sub:'Minor',p:1},black:{n:'Black',sub:'Expectant',p:0}
+};
+const CHECKS={
+  walk:{q:'Ask: “Can you walk?”',s:5},
+  breath:{q:'Look, listen, feel: is he/she breathing?',s:10},
+  rate:{q:'Count the breaths per minute',s:15},
+  pulse:{q:'Check radial pulse and capillary refill',s:10},
+  mental:{q:'Say: “Squeeze my hand.”',s:10}
+};
+const PATIENTS=[
+ {id:1,who:'Man, about 45',see:'At the green flag. He walked here after your call. He is holding his left arm and shouting: “My arm! My arm!”',
+  f:{walk:'Yes. He walked here without help.',breath:'Breathing.',rate:'18 breaths per minute.',pulse:'Strong radial pulse. Refill under 2 seconds.',mental:'He squeezes your hand.'},
+  tag:'green',need:['walk'],why:'Can walk → GREEN. Check him again later.'},
+ {id:2,who:'Woman, about 30',see:'Lying next to the bus. Her eyes are closed.',
+  f:{walk:'She does not move or answer.',breath:'Not breathing. You open the airway: still not breathing.',rate:'No breaths.',pulse:'No radial pulse.',mental:'No response.'},
+  tag:'black',need:['walk','breath'],why:'Cannot walk → not breathing, even after you open the airway → BLACK.'},
+ {id:3,who:'Young man, about 20',see:'Lying on the road. His face is pale and he is breathing fast.',
+  f:{walk:'“I can’t… I can’t get up.”',breath:'Breathing.',rate:'36 breaths per minute.',pulse:'Radial pulse present. Refill under 2 seconds.',mental:'He squeezes your hand.'},
+  tag:'red',need:['walk','breath','rate'],why:'Cannot walk → breathing → more than 30 breaths per minute → RED.'},
+ {id:4,who:'Man, about 65',see:'Sitting on the grass. His leg is bleeding a little.',
+  f:{walk:'“I can’t stand up. My leg hurts.”',breath:'Breathing.',rate:'20 breaths per minute.',pulse:'Radial pulse present. Refill under 2 seconds.',mental:'He squeezes your hand and answers clearly.'},
+  tag:'yellow',need:['walk','breath','rate','pulse','mental'],why:'Cannot walk → breathing, 30 or less → radial pulse present → follows commands → YELLOW.'},
+ {id:5,who:'Woman, about 50',see:'Lying on her side. Her skin is cold and sweaty.',
+  f:{walk:'She tries to stand up but falls back.',breath:'Breathing.',rate:'24 breaths per minute.',pulse:'No radial pulse. Refill over 2 seconds.',mental:'She squeezes your hand weakly.'},
+  tag:'red',need:['walk','breath','rate','pulse'],why:'Cannot walk → breathing, 30 or less → no radial pulse → RED.'},
+ {id:6,who:'Man, about 35',see:'Lying near the front of the bus. There is blood on his head.',
+  f:{walk:'He does not try to stand up.',breath:'Breathing.',rate:'18 breaths per minute.',pulse:'Radial pulse present. Refill under 2 seconds.',mental:'He looks at you but does not squeeze your hand. He cannot follow the command.'},
+  tag:'red',need:['walk','breath','rate','pulse','mental'],why:'Cannot walk → breathing, 30 or less → radial pulse present → cannot follow commands → RED.'},
+ {id:7,who:'Young woman, about 22',see:'At the green flag, crying. She walked here after your call.',
+  f:{walk:'Yes. She walked here without help.',breath:'Breathing.',rate:'22 breaths per minute.',pulse:'Strong radial pulse.',mental:'She answers your questions.'},
+  tag:'green',need:['walk'],why:'Can walk → GREEN. Check her again later.'},
+ {id:8,who:'Man, about 55',see:'Lying on the road behind the bus. He is not moving.',
+  f:{walk:'He does not move or answer.',breath:'Not breathing. You open the airway: he starts to breathe.',rate:'12 breaths per minute.',pulse:'Weak radial pulse.',mental:'No response.'},
+  tag:'red',need:['walk','breath'],why:'Cannot walk → not breathing → breathes after you open the airway → RED.'}
+];
+const QUIZ=[
+ {q:'A patient cannot walk and breathes 34 times a minute.',o:['Red','Yellow','Green'],a:0,ok:'Right. More than 30 breaths a minute → red.',no:'Not quite. More than 30 breaths a minute → red.'},
+ {q:'A patient walks to the safe area without help.',o:['Red','Yellow','Green'],a:2,ok:'Right. Walking wounded → green.',no:'Not quite. Patients who can walk → green.'},
+ {q:'A patient cannot walk, breathes 20 times a minute and has no radial pulse.',o:['Yellow','Red','Black'],a:1,ok:'Right. No radial pulse → red.',no:'Not quite. No radial pulse means poor perfusion → red.'}
+];
+const CALL_TEXT='Gediz one-one-two, this is Control. Road traffic collision on the main road, two kilometres outside Gediz. A minibus has left the road. Callers report at least eight injured. The fire service is on the way. Police are not on scene yet. How copy?';
+const CALLQ=[
+ {q:'How many people are injured?',o:['At least eight','Exactly three','Nobody knows'],a:0,ok:'Correct: “at least eight injured”.',no:'Listen again: “at least eight injured”.'},
+ {q:'Who is already on the way?',o:['The police','The fire service','Nobody'],a:1,ok:'Correct: “the fire service is on the way”.',no:'Listen again: “the fire service is on the way”. The police are not on scene yet.'},
+ {q:'Choose the best reply to Control.',o:['Control, Gediz one-one-two. Copy, we are en route.','Yes, OK, we go now.','Control, repeat please, over and out.'],a:0,ok:'Good radio English: name, “copy”, status.',no:'On the radio: say who you are, then “copy” and your status. “Over and out” is wrong: use “over” or “out”, not both.'}
+];
+const SCENES=[
+ {who:'E',name:'Elif (team leader)',text:'You arrive first. The minibus is on its side. There is fuel on the road, and a man is smoking a cigarette next to it. Elif turns to you: “What do we do first?”',
+  o:[
+   {t:'Run to the bus and start checking the patients.',ok:false,r:'Elif grabs your arm. “Stop! The scene is not safe. If the fuel catches fire, we become patients too.”'},
+   {t:'Stay back. Tell the man: “Put out your cigarette and move away, please.” Then report the fuel to Control.',ok:true,r:'Good call. The man moves away. Control asks the fire service to cover the fuel. Elif nods: “Scene safe. Now we can work.”'},
+   {t:'Start treating the patients who are lying near the fuel.',ok:false,r:'“Not yet,” says Elif. “The scene must be safe first. Working next to fuel and a cigarette is too dangerous.”'}
+  ]},
+ {who:'C',name:'Can (EMT)',text:'The scene is safe. People are shouting and moving around. Can turns to you: “Tell them what to do.” What do you say?',
+  o:[
+   {t:'“Everybody stay where you are! Don’t move!”',ok:false,r:'Now nobody moves, so you must check everyone one by one, also people with small injuries. This takes much longer. START begins with the walking wounded.'},
+   {t:'“Who is the worst? Show me!”',ok:false,r:'Everyone points at a different person. Bystanders cannot triage. Use a clear START command.'},
+   {t:'“Everyone who can walk, please go to the green flag by the bus stop.”',ok:true,r:'Two people walk to the green flag. Now you can focus on the patients who cannot walk.'}
+  ]}
+];
+const PHRASES=[
+ ['Put out your cigarette, please.','Lütfen sigaranızı söndürün.'],
+ ['Move away from the fuel.','Yakıttan uzaklaşın.'],
+ ['If you can walk, go to the green flag.','Yürüyebiliyorsanız yeşil bayrağa gidin.'],
+ ['Can you hear me? Squeeze my hand.','Beni duyuyor musunuz? Elimi sıkın.'],
+ ['Stay with me. Help is coming.','Benimle kalın. Yardım geliyor.']
+];
+const VOCAB=[
+ ['mass casualty incident','çok sayıda yaralının olduğu olay'],
+ ['walking wounded','yürüyebilen yaralılar'],
+ ['respiratory rate','solunum sayısı'],
+ ['open the airway','hava yolunu açmak'],
+ ['radial pulse','radyal nabız'],
+ ['capillary refill','kapiller dolum'],
+ ['follow simple commands','basit komutlara uymak'],
+ ['immediate · delayed · minor · expectant','kırmızı · sarı · yeşil · siyah']
+];
+
+const NUM=['zero','one','two','three','four','five','six','seven','eight'];
+const KEY='g112-shift5';
+let S=fresh();
+function fresh(){return {step:0,quiz:{},call:{},scene:[{first:null,cur:null},{first:null,cur:null}],pt:{},open:null,radio:[],radioTries:0,radioOK:false}}
+function pt(id){return S.pt[id]||(S.pt[id]={done:[],tag:null})}
+function clock(){let s=0;for(const k in S.pt)for(const c of S.pt[k].done)s+=CHECKS[c].s;return s}
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+
+function speak(text){
+  try{
+    const sy=window.speechSynthesis; if(!sy) return;
+    sy.cancel();
+    const u=new SpeechSynthesisUtterance(text); u.lang='en-GB'; u.rate=.92;
+    const vs=sy.getVoices(); const v=vs.find(v=>/^en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang));
+    if(v) u.voice=v; sy.speak(u);
+  }catch(e){}
+}
+
+function triageScore(id){
+  const p=PATIENTS[id-1], st=pt(id); if(!st.tag) return {pts:0,kind:'none'};
+  const extra=st.done.filter(c=>!p.need.includes(c)).length;
+  let pts,kind;
+  if(st.tag===p.tag){pts=100;kind='ok'}
+  else if(p.tag==='black'||st.tag==='black'){pts=0;kind='under'}
+  else if(TAGS[st.tag].p>TAGS[p.tag].p){pts=40;kind='over'}
+  else {pts=0;kind='under'}
+  return {pts:Math.max(0,pts-extra*5),kind,extra};
+}
+function xp(){
+  let x=0;
+  QUIZ.forEach((q,i)=>{if(S.quiz[i]===q.a)x+=10});
+  CALLQ.forEach((q,i)=>{if(S.call[i]===q.a)x+=10});
+  S.scene.forEach((sc,i)=>{if(sc.first!==null&&SCENES[i].o[sc.first].ok)x+=50});
+  PATIENTS.forEach(p=>x+=triageScore(p.id).pts);
+  if(S.radioOK)x+=S.radioTries<=1?50:25;
+  return x;
+}
+function counts(){const c={red:0,yellow:0,green:0,black:0};PATIENTS.forEach(p=>{const t=pt(p.id).tag;if(t)c[t]++});return c}
+function radioPieces(){
+  const c=counts();
+  return [
+    'Control, this is Gediz one-one-two.',
+    'We are on scene. The scene is safe.',
+    `Triage complete: ${NUM[c.red]} red, ${NUM[c.yellow]} yellow, ${NUM[c.green]} green, ${NUM[c.black]} black.`,
+    'Request more ambulances to our location. Over.'
+  ];
+}
+function badges(){
+  const correct=PATIENTS.filter(p=>triageScore(p.id).kind==='ok').length;
+  return [
+    {n:'Scene Safe',d:'Chose scene safety first, on the first try.',on:S.scene[0].first!==null&&SCENES[0].o[S.scene[0].first].ok},
+    {n:'Triage Officer',d:'Tagged at least 7 of 8 patients correctly.',on:correct>=7},
+    {n:'Fast Hands',d:'Triage finished in 4:00 or less on the scene clock.',on:correct>=7&&clock()<=240},
+    {n:'Clear Radio',d:'Built the radio report on the first try.',on:S.radioOK&&S.radioTries<=1}
+  ];
+}
+
+/* ---------- rendering ---------- */
+const $=s=>document.querySelector(s);
+function render(){
+  $('#steps').innerHTML=STEPS.map((s,i)=>`<button data-act="go" data-s="${i}" class="${i===S.step?'on':''} ${i<S.step?'done':''}" aria-current="${i===S.step?'step':'false'}">${i+1} ${s.t}</button>`).join('');
+  $('#xp').textContent='XP '+xp();
+  $('#clock').textContent='⏱ '+fmt(clock());
+  $('#main').innerHTML=[vBrief,vCall,vScene,vTriage,vRadio,vDebrief][S.step]();
+}
+function mcq(group,i,q){
+  const ch=S[group][i], done=ch!==undefined;
+  return `<div class="mcq"><p><b>${i+1}.</b> ${q.q}</p><div class="opts">${q.o.map((o,j)=>{
+    let cls='opt'; if(done&&j===q.a)cls+=' right'; else if(done&&j===ch)cls+=' wrong';
+    return `<button class="${cls}" data-act="mcq" data-g="${group}" data-i="${i}" data-j="${j}" ${done?'disabled':''}>${o}</button>`}).join('')}</div>
+    ${done?`<p class="fb ${ch===q.a?'ok':'no'}">${ch===q.a?q.ok:q.no}</p>`:''}</div>`;
+}
+function next(label,to){return `<div class="row"><button class="btn" data-act="go" data-s="${to}">${label}</button></div>`}
+
+function vBrief(){
+  return `<section><span class="layer core">Common core · Student's Book</span><h2>When there are too many patients</h2></section>
+  <article class="card reading">
+    <p>In a <b>mass casualty incident</b>, there are more patients than paramedics and ambulances. You cannot treat everyone at once, so you use <b>triage</b> to decide who needs help first.</p>
+    <p>Many EMS teams use <b>START</b> (Simple Triage and Rapid Treatment). It should take about a minute or less for each patient. First, ask everyone who can walk to go to a safe area. These <b>walking wounded</b> are <b>green</b>.</p>
+    <p>Then check the other patients one by one. Look at <b>breathing</b>. If a patient is not breathing, open the airway. If they still do not breathe, they are <b>black</b>. If they start to breathe, or if they breathe more than 30 times a minute, they are <b>red</b>.</p>
+    <p>Next, check <b>perfusion</b>. No radial pulse, or a capillary refill longer than 2 seconds, means <b>red</b>. Finally, check <b>mental status</b>. A patient who cannot follow simple commands is <b>red</b>. Everyone else is <b>yellow</b>.</p>
+  </article>
+  <section class="card"><h3>START at a glance</h3>
+    <ol class="flow">
+      <li><span><span class="q">Can walk?</span> Yes</span><span class="pill p-green">Green</span></li>
+      <li><span><span class="q">Breathing?</span> No, even after opening the airway</span><span class="pill p-black">Black</span></li>
+      <li><span><span class="q">Breathing?</span> Only after opening the airway, or more than 30 per minute</span><span class="pill p-red">Red</span></li>
+      <li><span><span class="q">Perfusion:</span> no radial pulse or refill over 2 s</span><span class="pill p-red">Red</span></li>
+      <li><span><span class="q">Mental status:</span> cannot follow simple commands</span><span class="pill p-red">Red</span></li>
+      <li><span><span class="q">All checks passed</span></span><span class="pill p-yellow">Yellow</span></li>
+    </ol>
+  </section>
+  <section class="card"><h3>Key language</h3>
+    <ul class="vocab">${VOCAB.map(v=>`<li><button class="say" data-act="say" data-t="${v[0]}" aria-label="Listen: ${v[0]}">${SPK}</button><div><b>${v[0]}</b><span>${v[1]}</span></div></li>`).join('')}</ul>
+  </section>
+  <section class="card"><h3>Check yourself</h3>${QUIZ.map((q,i)=>mcq('quiz',i,q)).join('')}</section>
+  ${next('Start the shift','1')}`;
+}
+function vCall(){
+  const showT=S.showT;
+  return `<section><span class="layer exp">Experimental layer · Audio</span><h2>Radio call from Control</h2><p class="muted">Listen to the call. Answer the questions. Open the transcript only if you need it.</p></section>
+  <section class="card" style="display:grid;gap:12px">
+    <div class="row"><button class="btn" data-act="say" data-t="${CALL_TEXT}">▶ Play radio call</button><button class="btn ghost" data-act="trans">${showT?'Hide':'Show'} transcript</button></div>
+    ${showT?`<p class="radio">${CALL_TEXT}</p>`:''}
+  </section>
+  <section class="card">${CALLQ.map((q,i)=>mcq('call',i,q)).join('')}</section>
+  ${next('Drive to the scene','2')}`;
+}
+function vScene(){
+  let html=`<section><span class="layer exp">Experimental layer · Branching scenario</span><h2>On scene</h2><p class="muted">Your choices change what happens. Your first choice counts for XP.</p></section>`;
+  for(let i=0;i<SCENES.length;i++){
+    const sc=SCENES[i], st=S.scene[i];
+    if(i>0&&!(S.scene[i-1].cur!==null&&SCENES[i-1].o[S.scene[i-1].cur].ok)) break;
+    const picked=st.cur;
+    html+=`<section class="card" style="display:grid;gap:14px">
+      <div class="speaker"><span class="avatar" aria-hidden="true">${sc.who}</span><div><p class="small muted">${sc.name}</p><p>${sc.text}</p></div></div>
+      ${picked===null?`<div class="choice">${sc.o.map((o,j)=>`<button class="opt" data-act="scene" data-i="${i}" data-j="${j}">${o.t}</button>`).join('')}</div>`
+        :`<p><b>You:</b> ${sc.o[picked].t}</p><div class="outcome ${sc.o[picked].ok?'ok':'no'}">${sc.o[picked].r}</div>
+          ${sc.o[picked].ok?'':`<div class="row"><button class="btn ghost" data-act="retry" data-i="${i}">Go back and choose again</button></div>`}`}
+    </section>`;
+  }
+  const allOk=S.scene.every((st,i)=>st.cur!==null&&SCENES[i].o[st.cur].ok);
+  if(allOk){
+    html+=`<section class="card"><h3>Useful language</h3><ul class="vocab">${PHRASES.map(v=>`<li><button class="say" data-act="say" data-t="${v[0]}" aria-label="Listen">${SPK}</button><div><b>${v[0]}</b><span>${v[1]}</span></div></li>`).join('')}</ul></section>${next('Start triage','3')}`;
+  }
+  return html;
+}
+function vTriage(){
+  const all=PATIENTS.every(p=>pt(p.id).tag);
+  let html=`<section><span class="layer exp">Experimental layer · Game</span><h2>Triage eight patients</h2><p class="muted">Open a tag. Do only the checks you need, then choose a colour. Every check adds time to the scene clock.</p></section>
+  <div class="tags">${PATIENTS.map(p=>{const t=pt(p.id).tag;return `<button class="tag t-${t||'none'} ${S.open===p.id?'sel':''}" data-act="open" data-id="${p.id}"><span class="tid">P${p.id}</span><span class="who">${p.who}</span><span class="st">${t?TAGS[t].n+' · '+TAGS[t].sub:'Not tagged'}</span></button>`}).join('')}</div>`;
+  if(S.open){
+    const p=PATIENTS[S.open-1], st=pt(p.id);
+    html+=`<section class="card panel" id="panel">
+      <div><h3>P${p.id} · ${p.who}</h3><p>${p.see}</p></div>
+      <div class="checks">${Object.entries(CHECKS).map(([k,c])=>`<button class="check" data-act="check" data-c="${k}" ${st.done.includes(k)?'disabled':''}>${c.q}<small>+${c.s} s</small></button>`).join('')}</div>
+      ${st.done.length?`<ul class="findings">${st.done.map(k=>`<li><b>${CHECKS[k].q}</b><br>${p.f[k]}</li>`).join('')}</ul>`:''}
+      <div class="assign">${Object.entries(TAGS).map(([k,t])=>`<button class="p-${k} ${st.tag===k?'picked':''}" data-act="tag" data-t="${k}">${t.n}<small>${t.sub}</small></button>`).join('')}</div>
+    </section>`;
+  }
+  html+=`<div class="row"><button class="btn" data-act="go" data-s="4" ${all?'':'disabled'}>Finish triage</button><span class="small muted">${PATIENTS.filter(p=>pt(p.id).tag).length} / 8 tagged</span></div>`;
+  return html;
+}
+function vRadio(){
+  const pieces=radioPieces();
+  if(!S.order) S.order=[2,0,3,1];
+  const used=S.radio;
+  return `<section><span class="layer exp">Experimental layer · Radio game</span><h2>Report to Control</h2><p class="muted">Tap the lines in the right order to build your radio report. The numbers come from your own triage.</p></section>
+  <section class="card" style="display:grid;gap:12px">
+    <div class="pieces">${S.order.map(i=>`<button class="piece" data-act="piece" data-i="${i}" ${used.includes(i)||S.radioOK?'disabled':''}>${pieces[i]}</button>`).join('')}</div>
+    <div class="built" aria-live="polite">${used.length?used.map(i=>`<span class="ln">${pieces[i]}</span>`).join(''):'<span class="small muted">Your report appears here.</span>'}</div>
+    ${S.radioMsg?`<p class="fb ${S.radioOK?'ok':'no'}">${S.radioMsg}</p>`:''}
+    <div class="row">
+      <button class="btn" data-act="rcheck" ${used.length===4&&!S.radioOK?'':'disabled'}>Check</button>
+      <button class="btn ghost" data-act="rreset" ${used.length&&!S.radioOK?'':'disabled'}>Clear</button>
+      ${S.radioOK?`<button class="btn ghost" data-act="say" data-t="${pieces.join(' ')}">▶ Hear your report</button>`:''}
+    </div>
+  </section>
+  ${S.radioOK?next('Go to debrief','5'):''}`;
+}
+function vDebrief(){
+  const b=badges(), correct=PATIENTS.filter(p=>triageScore(p.id).kind==='ok').length;
+  const label={ok:'Correct',over:'Over-triage',under:'Under-triage',none:'Not tagged'};
+  return `<section><span class="layer exp">Experimental layer · Debrief</span><h2>End of shift</h2></section>
+  <section class="card score"><div><div class="big">${xp()}</div><span class="muted">XP this shift</span></div><div><div class="big">${correct}/8</div><span class="muted">correct tags</span></div><div><div class="big">${fmt(clock())}</div><span class="muted">scene clock</span></div></section>
+  <section class="card"><h3>Badges</h3><div class="badges">${b.map(x=>`<div class="badge ${x.on?'':'off'}"><b>${x.on?'★ ':''}${x.n}</b><span class="small muted">${x.d}</span></div>`).join('')}</div></section>
+  <section class="card"><h3>Patient review</h3><div class="tbl"><table><thead><tr><th>Patient</th><th>You</th><th>Correct</th><th>Why</th></tr></thead><tbody>
+  ${PATIENTS.map(p=>{const st=pt(p.id),sc=triageScore(p.id);return `<tr><td>P${p.id}</td><td>${st.tag?`<span class="pill p-${st.tag}">${TAGS[st.tag].n}</span>`:'—'}<br><span class="small muted">${label[sc.kind]}${sc.extra?` · ${sc.extra} extra check${sc.extra>1?'s':''}`:''}</span></td><td><span class="pill p-${p.tag}">${TAGS[p.tag].n}</span></td><td class="small">${p.why}</td></tr>`}).join('')}
+  </tbody></table></div><p class="small muted" style="margin-top:10px">Under-triage (a colour that is too low) is the most dangerous mistake. Over-triage costs resources but is safer.</p></section>
+  <div class="row"><button class="btn ghost" data-act="restart">Play the shift again</button></div>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const d=b.dataset;
+  switch(d.act){
+    case 'go': S.step=+d.s; render(); window.scrollTo(0,0); return;
+    case 'say': speak(d.t); return;
+    case 'trans': S.showT=!S.showT; break;
+    case 'mcq': if(S[d.g][d.i]===undefined) S[d.g][d.i]=+d.j; break;
+    case 'scene': {const st=S.scene[+d.i]; st.cur=+d.j; if(st.first===null) st.first=+d.j; break;}
+    case 'retry': S.scene[+d.i].cur=null; break;
+    case 'open': S.open=+d.id; render(); const pn=$('#panel'); if(pn) pn.scrollIntoView({block:'nearest',behavior:'smooth'}); return;
+    case 'check': {const st=pt(S.open); if(!st.done.includes(d.c)) st.done.push(d.c); break;}
+    case 'tag': pt(S.open).tag=d.t; S.radio=[]; S.radioOK=false; S.radioMsg=''; break;
+    case 'piece': if(!S.radio.includes(+d.i)) S.radio.push(+d.i); break;
+    case 'rreset': S.radio=[]; S.radioMsg=''; break;
+    case 'rcheck': {
+      S.radioTries++;
+      const ok=S.radio.every((v,i)=>v===i);
+      S.radioOK=ok;
+      S.radioMsg=ok?'Clear report: who you are, the scene, the triage numbers, then your request.':'Not in the right order. Start with who you are calling and who you are. End with your request and “Over”.';
+      if(!ok) S.radio=[];
+      break;}
+    case 'restart': S=fresh(); break;
+  }
+  render(); save();
+});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.scene)S=Object.assign(fresh(),v)}catch(e){}}
+load(); render();
+try{if(window.speechSynthesis)speechSynthesis.getVoices()}catch(e){}
+if(document.querySelector('link[rel="manifest"]')&&'serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+
+</body></html>
