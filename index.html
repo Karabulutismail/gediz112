@@ -10,6 +10,7 @@
   --accent:#C4420C; --accent-ink:#FFFFFF;
   --red:#C62828; --yellow:#F2C200; --green:#2E7D32; --black:#161A19; --on-yellow:#1E1A00;
   --ok:#2E7D32; --bad:#C62828;
+  --skin:#E2B08C; --skin2:#B9835F; --nail:#EBA9A3; --nail-pressed:#F7F0EA;
   --f-display:"Barlow Condensed","Arial Narrow",sans-serif;
   --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -77,6 +78,22 @@ p{margin:0}
 .p-green{background:var(--green);color:#fff}
 .p-black{background:var(--black);color:#fff;box-shadow:inset 0 0 0 1px var(--line)}
 
+.hero{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:6px;background:var(--soft)}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.skills figure{margin:0;display:grid;gap:8px;align-content:start}
+.skills svg{width:100%;height:auto;background:var(--soft);border-radius:4px}
+.skills figcaption b{display:block;font:700 1.05rem/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.03em}
+.skills figcaption{font-size:.9rem}
+.skills .lbl{font:500 11px var(--f-mono);fill:var(--muted)}
+.skills .ln{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.skills .sk{fill:var(--skin);stroke:var(--ink);stroke-width:1.5}
+.skills .sk2{fill:var(--skin2);stroke:var(--ink);stroke-width:1.5}
+.map{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--line)}
+.map .pm{cursor:pointer}
+.map .pm:focus-visible{outline:none}
+.map .pm:focus-visible circle{stroke:var(--accent);stroke-width:4}
+.badge .ic{width:34px;height:34px;color:var(--accent)}
+.badge.off .ic{color:var(--muted)}
 .mcq{display:grid;gap:8px}
 .mcq + .mcq{margin-top:16px}
 .opts{display:flex;flex-wrap:wrap;gap:8px}
@@ -96,7 +113,13 @@ p{margin:0}
 .btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
 
 .speaker{display:flex;gap:12px;align-items:flex-start}
-.avatar{flex:none;width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font:700 1rem/1 var(--f-display);border:1px solid var(--line)}
+.avatar{flex:none;width:52px;height:52px;border-radius:50%;background:var(--soft);border:2px solid var(--line);object-fit:cover}
+.crew-row{display:flex;flex-wrap:wrap;gap:16px}
+.crew-row figure{margin:0;display:flex;gap:12px;align-items:center;flex:1 1 190px;min-width:0}
+.crew-row img,.crew-row .you{flex:none;width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:var(--soft)}
+.crew-row .you{display:grid;place-items:center;font:700 1rem/1 var(--f-display);letter-spacing:.06em;color:var(--accent)}
+.crew-row b{display:block;font:700 1.15rem/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.03em}
+.crew-row span{font-size:.88rem;color:var(--muted)}
 .choice{display:grid;gap:8px}
 .choice .opt{width:100%}
 .outcome{padding:12px 14px;border-radius:4px;background:var(--soft);border-left:4px solid var(--line)}
@@ -115,6 +138,9 @@ p{margin:0}
 .tag.t-red .st{border-color:var(--red)} .tag.t-yellow .st{border-color:var(--yellow)}
 .tag.t-green .st{border-color:var(--green)} .tag.t-black .st{border-color:var(--black)}
 .panel{display:grid;gap:14px}
+.pt-head{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;align-items:start}
+.pt-img{display:block;width:100%;max-width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:6px;background:var(--soft)}
+@media (max-width:520px){.pt-head{grid-template-columns:minmax(0,1fr)}.pt-img{max-width:280px}}
 .checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
 .check{border:1px dashed var(--muted);background:none;border-radius:4px;padding:10px 12px;text-align:left;font-size:.92rem}
 .check small{display:block;font-family:var(--f-mono);color:var(--muted);font-size:.75rem}
@@ -223,13 +249,13 @@ const CALLQ=[
  {q:'Choose the best reply to Control.',o:['Control, Gediz one-one-two. Copy, we are en route.','Yes, OK, we go now.','Control, repeat please, over and out.'],a:0,ok:'Good radio English: name, “copy”, status.',no:'On the radio: say who you are, then “copy” and your status. “Over and out” is wrong: use “over” or “out”, not both.'}
 ];
 const SCENES=[
- {who:'E',name:'Elif (team leader)',text:'You arrive first. The minibus is on its side. There is fuel on the road, and a man is smoking a cigarette next to it. Elif turns to you: “What do we do first?”',
+ {who:'img/u5_elif.jpg',name:'Elif (team leader)',img:'img/u5_scene_safety.jpg',alt:'A man smokes next to spilled fuel by the overturned minibus. Elif raises her hands and tells him to stop.',text:'You arrive first. The minibus is on its side. There is fuel on the road, and a man is smoking a cigarette next to it. Elif turns to you: “What do we do first?”',
   o:[
    {t:'Run to the bus and start checking the patients.',ok:false,r:'Elif grabs your arm. “Stop! The scene is not safe. If the fuel catches fire, we become patients too.”'},
    {t:'Stay back. Tell the man: “Put out your cigarette and move away, please.” Then report the fuel to Control.',ok:true,r:'Good call. The man moves away. Control asks the fire service to cover the fuel. Elif nods: “Scene safe. Now we can work.”'},
    {t:'Start treating the patients who are lying near the fuel.',ok:false,r:'“Not yet,” says Elif. “The scene must be safe first. Working next to fuel and a cigarette is too dangerous.”'}
   ]},
- {who:'C',name:'Can (EMT)',text:'The scene is safe. People are shouting and moving around. Can turns to you: “Tell them what to do.” What do you say?',
+ {who:'img/u5_can.jpg',name:'Can (EMT)',after:'img/u5_green_flag.jpg',afterAlt:'Two walking wounded wait at the bus stop next to the green flag: a man holding his arm and a young woman crying on the bench.',text:'The scene is safe. People are shouting and moving around. Can turns to you: “Tell them what to do.” What do you say?',
   o:[
    {t:'“Everybody stay where you are! Don’t move!”',ok:false,r:'Now nobody moves, so you must check everyone one by one, also people with small injuries. This takes much longer. START begins with the walking wounded.'},
    {t:'“Who is the worst? Show me!”',ok:false,r:'Everyone points at a different person. Bystanders cannot triage. Use a clear START command.'},
@@ -254,6 +280,80 @@ const VOCAB=[
  ['immediate · delayed · minor · expectant','kırmızı · sarı · yeşil · siyah']
 ];
 
+const SKILLS=[
+ {t:'Radial pulse',d:'Put two fingers on the thumb side of the wrist. Do not use your thumb.',
+  svg:`<svg viewBox="0 0 220 150" role="img" aria-label="Two fingers on the thumb side of the wrist">
+   <path class="sk" d="M8 64 H128 C140 64 146 58 156 56 C176 52 196 60 200 74 C204 90 186 102 164 100 C150 99 142 94 128 94 H8 Z"/>
+   <path class="sk" d="M158 57 C163 43 176 37 184 40 C189 44 180 52 174 58"/>
+   <rect class="sk2" x="124" y="18" width="11" height="48" rx="5.5"/>
+   <rect class="sk2" x="137" y="22" width="11" height="44" rx="5.5"/>
+   <circle cx="136" cy="72" r="4" fill="var(--red)"/>
+   <path class="ln" d="M139 76 L156 122"/>
+   <text class="lbl" x="212" y="136" text-anchor="end">radial artery</text>
+   <text class="lbl" x="170" y="28">thumb</text>
+  </svg>`},
+ {t:'Capillary refill',d:'Press the nail for 5 seconds, then release. Colour should come back in 2 seconds or less.',
+  svg:`<svg viewBox="0 0 220 150" role="img" aria-label="Press the nail, release, colour returns in two seconds or less">
+   <rect class="sk" x="10" y="64" width="90" height="30" rx="15"/>
+   <rect x="72" y="67" width="22" height="18" rx="6" fill="var(--nail-pressed)" stroke="var(--ink)" stroke-width="1"/>
+   <rect class="sk2" x="74" y="26" width="18" height="44" rx="9"/>
+   <path class="ln" d="M104 79 H116 M111 74 L116 79 L111 84"/>
+   <rect class="sk" x="120" y="64" width="90" height="30" rx="15"/>
+   <rect x="182" y="67" width="22" height="18" rx="6" fill="var(--nail)" stroke="var(--ink)" stroke-width="1"/>
+   <text class="lbl" x="55" y="120" text-anchor="middle">press 5 s</text>
+   <text class="lbl" x="165" y="120" text-anchor="middle">colour back</text>
+   <text class="lbl" x="165" y="134" text-anchor="middle">in ≤ 2 s</text>
+  </svg>`},
+ {t:'Open the airway',d:'Head tilt, chin lift: one hand on the forehead, two fingers under the chin. If you suspect a spinal injury, use a jaw thrust.',
+  svg:`<svg viewBox="0 0 220 150" role="img" aria-label="Patient lying on the back; one hand tilts the head, two fingers lift the chin">
+   <line x1="6" y1="122" x2="214" y2="122" stroke="var(--line)" stroke-width="2"/>
+   <rect class="sk" x="8" y="98" width="78" height="24" rx="10"/>
+   <path class="sk" d="M80 102 L100 96 L104 118 L84 122 Z"/>
+   <circle class="sk" cx="112" cy="94" r="27"/>
+   <path class="sk" d="M128 72 L139 63 L136 77"/>
+   <path class="sk" d="M136 92 C146 94 148 104 140 108"/>
+   <rect class="sk2" x="86" y="58" width="40" height="13" rx="6.5" transform="rotate(-18 106 64)"/>
+   <rect class="sk2" x="140" y="106" width="24" height="8" rx="4"/>
+   <rect class="sk2" x="140" y="116" width="24" height="8" rx="4" transform="translate(0 -2)"/>
+   <path class="ln" d="M96 44 C86 34 70 34 62 44 M62 44 L64 36 M62 44 L70 44"/>
+   <path class="ln" d="M176 116 V96 M171 101 L176 96 L181 101"/>
+   <text class="lbl" x="40" y="30">head tilt</text>
+   <text class="lbl" x="212" y="88" text-anchor="end">chin lift</text>
+  </svg>`}
+];
+const PPOS={1:[560,122],7:[600,126],2:[262,288],3:[200,218],4:[140,292],5:[350,300],6:[436,158],8:[232,166]};
+const TAGHEX={red:['#C62828','#FFFFFF'],yellow:['#F2C200','#1E1A00'],green:['#2E7D32','#FFFFFF'],black:['#161A19','#FFFFFF']};
+function mapSvg(){
+  const marks=PATIENTS.map(p=>{
+    const [x,y]=PPOS[p.id], t=pt(p.id).tag, c=t?TAGHEX[t]:['#FFFFFF','#13201C'], sel=S.open===p.id;
+    return `<g class="pm" data-act="open" data-id="${p.id}" role="button" tabindex="0" aria-label="Patient ${p.id}${t?', '+TAGS[t].n:''}">
+      ${sel?`<circle cx="${x}" cy="${y}" r="22" fill="none" stroke="#FF7A3D" stroke-width="4"/>`:''}
+      <circle cx="${x}" cy="${y}" r="16" fill="${c[0]}" stroke="#13201C" stroke-width="1.5"/>
+      <text x="${x}" y="${y+5}" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700" font-size="16" fill="${c[1]}">${p.id}</text></g>`;
+  }).join('');
+  return `<svg class="map" viewBox="20 20 640 340" role="group" aria-label="Scene map. Tap a patient.">
+  <rect x="20" y="20" width="640" height="340" fill="#9DBF7A"/>
+  <g fill="#8AB066"><circle cx="70" cy="60" r="16"/><circle cx="96" cy="48" r="12"/><circle cx="620" cy="320" r="18"/><circle cx="596" cy="334" r="12"/><circle cx="470" cy="330" r="10"/><circle cx="110" cy="335" r="14"/></g>
+  <rect x="20" y="150" width="640" height="84" fill="#6E7472"/>
+  <rect x="20" y="148" width="640" height="3" fill="#E9E5D8"/><rect x="20" y="233" width="640" height="3" fill="#E9E5D8"/>
+  <g fill="#F2E7B8"><rect x="30" y="190" width="30" height="4"/><rect x="90" y="190" width="30" height="4"/><rect x="150" y="190" width="30" height="4"/><rect x="450" y="190" width="30" height="4"/><rect x="510" y="190" width="30" height="4"/><rect x="570" y="190" width="30" height="4"/><rect x="630" y="190" width="30" height="4"/></g>
+  <path d="M410 236 C 420 222, 452 220, 470 228 C 492 236, 496 254, 478 262 C 458 272, 424 270, 412 258 C 404 251, 404 242, 410 236 Z" fill="#2F2A33"/>
+  <path d="M432 240 C 444 234, 462 236, 470 244" fill="none" stroke="#7A6FA0" stroke-width="3" stroke-linecap="round"/>
+  <g transform="rotate(25 330 200)"><rect x="255" y="172" width="150" height="56" rx="8" fill="#F4F1EA" stroke="#3A3F3D" stroke-width="1.5"/><rect x="255" y="172" width="150" height="10" rx="4" fill="#E0A21B"/>
+   <g fill="#5B7C93"><rect x="270" y="190" width="18" height="22" rx="2"/><rect x="294" y="190" width="18" height="22" rx="2"/><rect x="318" y="190" width="18" height="22" rx="2"/><rect x="342" y="190" width="18" height="22" rx="2"/></g>
+   <rect x="372" y="186" width="26" height="30" rx="3" fill="#7FA0B6"/></g>
+  <rect x="56" y="165" width="112" height="52" rx="6" fill="#FFFFFF" stroke="#3A3F3D" stroke-width="1.5"/><rect x="56" y="198" width="112" height="7" fill="#C4420C"/><rect x="140" y="170" width="24" height="24" rx="3" fill="#8FB0C4"/>
+  <rect x="520" y="70" width="70" height="20" rx="3" fill="#D8D2C2" stroke="#6E6A5E" stroke-width="1"/>
+  <line x1="604" y1="56" x2="604" y2="104" stroke="#3A372F" stroke-width="2"/><path d="M605 57 L636 65 L605 74 Z" fill="#2E7D32"/>
+  <g fill="#E8661A"><path d="M200 148 l5 -12 l5 12 Z"/><path d="M500 148 l5 -12 l5 12 Z"/></g>
+  ${marks}</svg>`;
+}
+const BADGE_IC={
+ 'Scene Safe':'<path d="M17 3l11 4v9c0 7-5 11.5-11 15C11 27.5 6 23 6 16V7z"/><path d="M11.5 17l4 4 7.5-8.5"/>',
+ 'Triage Officer':'<path d="M10 5h14v25H10z"/><circle cx="17" cy="10" r="2"/><path d="M10 22h14v4H10z" fill="currentColor"/>',
+ 'Fast Hands':'<circle cx="17" cy="19" r="11"/><path d="M17 19v-6M14 3h6M17 3v5"/>',
+ 'Clear Radio':'<rect x="9" y="12" width="13" height="19" rx="2"/><path d="M12 12V4M12.5 19h6M12.5 24h6M25 10a6 6 0 0 1 0 9M28 6a11 11 0 0 1 0 17"/>'
+};
 const NUM=['zero','one','two','three','four','five','six','seven','eight'];
 const KEY='g112-shift5';
 let S=fresh();
@@ -330,6 +430,14 @@ function next(label,to){return `<div class="row"><button class="btn" data-act="g
 
 function vBrief(){
   return `<section><span class="layer core">Common core · Student's Book</span><h2>When there are too many patients</h2></section>
+  <img class="hero" src="img/u5_station.jpg" alt="Morning at the Gediz 112 station. Elif holds a coffee and a clipboard while Can checks a medical bag at the ambulance.">
+  <section class="card"><h3>Your crew today</h3>
+    <div class="crew-row">
+      <figure><img src="img/u5_elif.jpg" alt="Elif"><figcaption><b>Elif</b><span>Team leader, paramedic</span></figcaption></figure>
+      <figure><img src="img/u5_can.jpg" alt="Can"><figcaption><b>Can</b><span>Emergency medical technician</span></figcaption></figure>
+      <figure><span class="you" aria-hidden="true">YOU</span><figcaption><b>You</b><span>New paramedic, first month at the station</span></figcaption></figure>
+    </div>
+  </section>
   <article class="card reading">
     <p>In a <b>mass casualty incident</b>, there are more patients than paramedics and ambulances. You cannot treat everyone at once, so you use <b>triage</b> to decide who needs help first.</p>
     <p>Many EMS teams use <b>START</b> (Simple Triage and Rapid Treatment). It should take about a minute or less for each patient. First, ask everyone who can walk to go to a safe area. These <b>walking wounded</b> are <b>green</b>.</p>
@@ -346,6 +454,9 @@ function vBrief(){
       <li><span><span class="q">All checks passed</span></span><span class="pill p-yellow">Yellow</span></li>
     </ol>
   </section>
+  <section class="card"><h3>How to check</h3>
+    <div class="skills">${SKILLS.map(s=>`<figure>${s.svg}<figcaption><b>${s.t}</b>${s.d}</figcaption></figure>`).join('')}</div>
+  </section>
   <section class="card"><h3>Key language</h3>
     <ul class="vocab">${VOCAB.map(v=>`<li><button class="say" data-act="say" data-t="${v[0]}" aria-label="Listen: ${v[0]}">${SPK}</button><div><b>${v[0]}</b><span>${v[1]}</span></div></li>`).join('')}</ul>
   </section>
@@ -355,6 +466,8 @@ function vBrief(){
 function vCall(){
   const showT=S.showT;
   return `<section><span class="layer exp">Experimental layer · Audio</span><h2>Radio call from Control</h2><p class="muted">Listen to the call. Answer the questions. Open the transcript only if you need it.</p></section>
+  <img class="hero" src="img/u5_arrival.jpg" alt="Elif and Can step out of the ambulance. Ahead, a minibus lies on its side at the edge of a country road.">
+
   <section class="card" style="display:grid;gap:12px">
     <div class="row"><button class="btn" data-act="say" data-t="${CALL_TEXT}">▶ Play radio call</button><button class="btn ghost" data-act="trans">${showT?'Hide':'Show'} transcript</button></div>
     ${showT?`<p class="radio">${CALL_TEXT}</p>`:''}
@@ -369,9 +482,11 @@ function vScene(){
     if(i>0&&!(S.scene[i-1].cur!==null&&SCENES[i-1].o[S.scene[i-1].cur].ok)) break;
     const picked=st.cur;
     html+=`<section class="card" style="display:grid;gap:14px">
-      <div class="speaker"><span class="avatar" aria-hidden="true">${sc.who}</span><div><p class="small muted">${sc.name}</p><p>${sc.text}</p></div></div>
+      ${sc.img?`<img class="hero" src="${sc.img}" alt="${sc.alt}">`:''}
+      <div class="speaker"><img class="avatar" src="${sc.who}" alt=""><div><p class="small muted">${sc.name}</p><p>${sc.text}</p></div></div>
       ${picked===null?`<div class="choice">${sc.o.map((o,j)=>`<button class="opt" data-act="scene" data-i="${i}" data-j="${j}">${o.t}</button>`).join('')}</div>`
         :`<p><b>You:</b> ${sc.o[picked].t}</p><div class="outcome ${sc.o[picked].ok?'ok':'no'}">${sc.o[picked].r}</div>
+          ${sc.o[picked].ok&&sc.after?`<img class="hero" src="${sc.after}" alt="${sc.afterAlt}">`:''}
           ${sc.o[picked].ok?'':`<div class="row"><button class="btn ghost" data-act="retry" data-i="${i}">Go back and choose again</button></div>`}`}
     </section>`;
   }
@@ -384,11 +499,12 @@ function vScene(){
 function vTriage(){
   const all=PATIENTS.every(p=>pt(p.id).tag);
   let html=`<section><span class="layer exp">Experimental layer · Game</span><h2>Triage eight patients</h2><p class="muted">Open a tag. Do only the checks you need, then choose a colour. Every check adds time to the scene clock.</p></section>
+  ${mapSvg()}
   <div class="tags">${PATIENTS.map(p=>{const t=pt(p.id).tag;return `<button class="tag t-${t||'none'} ${S.open===p.id?'sel':''}" data-act="open" data-id="${p.id}"><span class="tid">P${p.id}</span><span class="who">${p.who}</span><span class="st">${t?TAGS[t].n+' · '+TAGS[t].sub:'Not tagged'}</span></button>`}).join('')}</div>`;
   if(S.open){
     const p=PATIENTS[S.open-1], st=pt(p.id);
     html+=`<section class="card panel" id="panel">
-      <div><h3>P${p.id} · ${p.who}</h3><p>${p.see}</p></div>
+      <div class="pt-head"><img class="pt-img" src="img/u5_p${p.id}.jpg" alt="Patient ${p.id}"><div><h3>P${p.id} · ${p.who}</h3><p>${p.see}</p></div></div>
       <div class="checks">${Object.entries(CHECKS).map(([k,c])=>`<button class="check" data-act="check" data-c="${k}" ${st.done.includes(k)?'disabled':''}>${c.q}<small>+${c.s} s</small></button>`).join('')}</div>
       ${st.done.length?`<ul class="findings">${st.done.map(k=>`<li><b>${CHECKS[k].q}</b><br>${p.f[k]}</li>`).join('')}</ul>`:''}
       <div class="assign">${Object.entries(TAGS).map(([k,t])=>`<button class="p-${k} ${st.tag===k?'picked':''}" data-act="tag" data-t="${k}">${t.n}<small>${t.sub}</small></button>`).join('')}</div>
@@ -402,6 +518,8 @@ function vRadio(){
   if(!S.order) S.order=[2,0,3,1];
   const used=S.radio;
   return `<section><span class="layer exp">Experimental layer · Radio game</span><h2>Report to Control</h2><p class="muted">Tap the lines in the right order to build your radio report. The numbers come from your own triage.</p></section>
+  <img class="hero" src="img/u5_radio.jpg" alt="Elif reports on the radio and checks her notepad while Can puts a triage tag on a patient's wrist.">
+
   <section class="card" style="display:grid;gap:12px">
     <div class="pieces">${S.order.map(i=>`<button class="piece" data-act="piece" data-i="${i}" ${used.includes(i)||S.radioOK?'disabled':''}>${pieces[i]}</button>`).join('')}</div>
     <div class="built" aria-live="polite">${used.length?used.map(i=>`<span class="ln">${pieces[i]}</span>`).join(''):'<span class="small muted">Your report appears here.</span>'}</div>
@@ -418,8 +536,10 @@ function vDebrief(){
   const b=badges(), correct=PATIENTS.filter(p=>triageScore(p.id).kind==='ok').length;
   const label={ok:'Correct',over:'Over-triage',under:'Under-triage',none:'Not tagged'};
   return `<section><span class="layer exp">Experimental layer · Debrief</span><h2>End of shift</h2></section>
+  <img class="hero" src="img/u5_end_of_shift.jpg" alt="Sunset at the station. Elif and Can sit on a bench and talk about the shift with you.">
+
   <section class="card score"><div><div class="big">${xp()}</div><span class="muted">XP this shift</span></div><div><div class="big">${correct}/8</div><span class="muted">correct tags</span></div><div><div class="big">${fmt(clock())}</div><span class="muted">scene clock</span></div></section>
-  <section class="card"><h3>Badges</h3><div class="badges">${b.map(x=>`<div class="badge ${x.on?'':'off'}"><b>${x.on?'★ ':''}${x.n}</b><span class="small muted">${x.d}</span></div>`).join('')}</div></section>
+  <section class="card"><h3>Badges</h3><div class="badges">${b.map(x=>`<div class="badge ${x.on?'':'off'}"><svg class="ic" viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${BADGE_IC[x.n]}</svg><b>${x.n}</b><span class="small muted">${x.d}</span></div>`).join('')}</div></section>
   <section class="card"><h3>Patient review</h3><div class="tbl"><table><thead><tr><th>Patient</th><th>You</th><th>Correct</th><th>Why</th></tr></thead><tbody>
   ${PATIENTS.map(p=>{const st=pt(p.id),sc=triageScore(p.id);return `<tr><td>P${p.id}</td><td>${st.tag?`<span class="pill p-${st.tag}">${TAGS[st.tag].n}</span>`:'—'}<br><span class="small muted">${label[sc.kind]}${sc.extra?` · ${sc.extra} extra check${sc.extra>1?'s':''}`:''}</span></td><td><span class="pill p-${p.tag}">${TAGS[p.tag].n}</span></td><td class="small">${p.why}</td></tr>`}).join('')}
   </tbody></table></div><p class="small muted" style="margin-top:10px">Under-triage (a colour that is too low) is the most dangerous mistake. Over-triage costs resources but is safer.</p></section>
@@ -452,6 +572,10 @@ document.addEventListener('click',e=>{
     case 'restart': S=fresh(); break;
   }
   render(); save();
+});
+document.addEventListener('keydown',e=>{
+  const g=e.target.closest&&e.target.closest('.pm');
+  if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();g.dispatchEvent(new MouseEvent('click',{bubbles:true}))}
 });
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.scene)S=Object.assign(fresh(),v)}catch(e){}}
